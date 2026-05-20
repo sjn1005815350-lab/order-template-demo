@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>报单排序模板 Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <div>
+          <h1>报单排序模板</h1>
+          <p>维护渠道顺序、模板设置，并将模板应用到客户交易账户。</p>
+        </div>
+      </header>
+
+      <section class="card table-card config-section">
+        <div class="table-toolbar">
+          <div>
+            <strong>顺序配置</strong>
+            <span id="sequenceSummary">共 0 个顺序模板</span>
+          </div>
+          <div class="toolbar-actions">
+            <button class="primary-btn" id="addSequenceBtn">新增</button>
+            <button class="ghost-btn" id="expandAllSequencesBtn">全部展开</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="expand-col"></th>
+                <th>顺序名称</th>
+                <th>备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="sequenceTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card table-card config-section">
+        <div class="table-toolbar">
+          <div>
+            <strong>模板设置</strong>
+            <span id="productTemplateSummary">共 0 个交易模板</span>
+          </div>
+          <div class="toolbar-actions">
+            <button class="primary-btn" id="addProductTemplateBtn">新增</button>
+            <button class="ghost-btn" id="expandAllProductTemplatesBtn">全部展开</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="expand-col"></th>
+                <th>交易模板名称</th>
+                <th>备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="productTemplateTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card table-card config-section">
+        <div class="table-toolbar">
+          <div>
+            <strong>客户模板应用</strong>
+            <span id="bindingSummary">共 0 个绑定关系</span>
+          </div>
+          <button class="primary-btn" id="addBindingBtn">新增</button>
+        </div>
+        <div class="filter-bar">
+          <label for="bindingAccountFilter">交易账户：</label>
+          <select id="bindingAccountFilter">
+            <option value="">请选择</option>
+          </select>
+          <button class="primary-btn" id="searchBindingBtn">查询</button>
+          <button class="ghost-btn" id="resetBindingBtn">重置</button>
+        </div>
+        <div class="table-wrap compact-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>交易账户</th>
+                <th>交易模板</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="bindingTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
