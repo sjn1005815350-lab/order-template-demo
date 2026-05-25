@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>报单排序模板配置需求说明书</title>
+    <style>
+      body { margin: 0; background: #f4f7fb; color: #1f2d3d; font-family: "Microsoft YaHei", Arial, sans-serif; line-height: 1.7; }
+      main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; background: #fff; }
+      h1 { border-bottom: 2px solid #1e88e5; padding-bottom: 10px; }
+      h2 { margin-top: 28px; color: #102a43; }
+      h3 { margin-top: 20px; color: #243b53; }
+      table { width: 100%; border-collapse: collapse; margin: 12px 0 22px; font-size: 14px; }
+      th, td { border: 1px solid #dce5ef; padding: 8px 10px; text-align: left; vertical-align: top; }
+      th { background: #eef5fc; white-space: nowrap; }
+      pre { background: #f6f8fa; border-radius: 4px; padding: 12px; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>报单排序模板配置需求说明书</h1>
+
+      <h2>1、文档信息</h2>
+      <table>
+        <tr><th>文档标题</th><td>报单排序模板配置需求说明书</td></tr>
+        <tr><th>涉及系统</th><td>BCT 系统</td></tr>
+        <tr><th>编制部门</th><td>TBD</td></tr>
+      </table>
+
+      <h2>2、版本修订记录</h2>
+      <table>
+        <thead><tr><th>序号</th><th>文档版本</th><th>修订日期</th><th>修订人</th><th>修订类型</th><th>修订概述</th><th>实现版本</th><th>是否评审</th></tr></thead>
+        <tbody><tr><td>1</td><td>ver1.0</td><td>YYYY-MM-DD</td><td>XXX</td><td>新增</td><td>初稿</td><td>BCT4.2x</td><td>否</td></tr></tbody>
+      </table>
+
+      <h2>3、需求概述</h2>
+      <h3>3.1、需求背景</h3>
+      <p>当前报单排序配置需要同时解决“配置复用”和“客户最终明细落地”两个问题。新版方案保留顺序配置和模板配置的复用能力，但客户配置保存时落到客户维度最终明细。模板仅作为新增客户配置时的快速填入工具，不作为客户最终保存字段。</p>
+
+      <h3>3.2、需求目标</h3>
+      <ul>
+        <li>维护不同对冲渠道的报单顺序，并通过“顺序名称”复用。</li>
+        <li>维护模板配置，沉淀常用业务类型、合约类型、交易市场、资产品种、交易方向和顺序名称组合。</li>
+        <li>新增客户配置时选择模板名称快速填入模板下明细。</li>
+        <li>客户配置最终保存交易账户维度明细数据，不保存模板引用关系。</li>
+      </ul>
+
+      <h3>3.3、需求范围</h3>
+      <p><strong>范围内：</strong>BCT 报单排序模板配置页面、顺序配置、模板配置、客户配置、新增客户配置弹框、模板快速填入、客户最终明细保存。</p>
+      <p><strong>范围外：</strong>对冲渠道基础资料维护、交易账户基础资料维护、模板审批发布、批量导入导出、智能路由执行链路改造、模板变更自动同步客户配置。</p>
+
+      <h3>3.4、功能列表</h3>
+      <table>
+        <thead><tr><th>序号</th><th>阶段</th><th>版本排期</th><th>所属系统</th><th>功能模块</th><th>功能点</th><th>功能概述</th><th>优先级</th><th>JIRA编号</th><th>备注说明</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>一阶段</td><td>BCT 4.2X</td><td>BCT</td><td>模板基础配置</td><td>顺序配置</td><td>维护顺序名称、备注、对冲渠道及报单排序</td><td>必须</td><td>TBD</td><td>保留当前排序顺序能力</td></tr>
+          <tr><td>2</td><td>一阶段</td><td>BCT 4.2X</td><td>BCT</td><td>模板基础配置</td><td>模板配置</td><td>通过母子表维护模板名称、备注及模板明细</td><td>必须</td><td>TBD</td><td>与顺序配置并列 sheet</td></tr>
+          <tr><td>3</td><td>一阶段</td><td>BCT 4.2X</td><td>BCT</td><td>客户配置</td><td>客户配置列表</td><td>展示交易账户维度最终明细配置</td><td>必须</td><td>TBD</td><td>不展示模板名称字段</td></tr>
+          <tr><td>4</td><td>一阶段</td><td>BCT 4.2X</td><td>BCT</td><td>客户配置</td><td>新增客户配置</td><td>弹框选择交易账户、模板名称，并维护明细</td><td>必须</td><td>TBD</td><td>交易账户必填</td></tr>
+          <tr><td>5</td><td>一阶段</td><td>BCT 4.2X</td><td>BCT</td><td>客户配置</td><td>模板快速填入</td><td>选择模板名称后将模板明细复制到弹框明细表</td><td>优先</td><td>TBD</td><td>模板仅用于快速填入</td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.5、阶段实现目标</h3>
+      <p>一阶段完成新版页面、顺序配置、模板配置、客户配置新增弹框和最终明细保存。二阶段可扩展客户配置编辑删除、批量导入导出、按模板刷新客户配置、配置审批和版本追溯。</p>
+
+      <h3>3.6、术语说明</h3>
+      <table>
+        <thead><tr><th>术语</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>顺序配置</td><td>定义一组对冲渠道报单先后顺序的基础配置。</td></tr>
+          <tr><td>顺序名称</td><td>顺序配置的唯一名称，供模板配置和客户配置明细引用。</td></tr>
+          <tr><td>模板配置</td><td>用于沉淀可复用明细组合的配置，不直接代表客户最终生效结果。</td></tr>
+          <tr><td>模板名称</td><td>模板配置的名称，在新增客户配置弹框中用于快速填入。</td></tr>
+          <tr><td>客户配置</td><td>交易账户维度最终保存和生效的明细配置。</td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.7、领域知识</h3>
+      <p>智能路由报单时通常根据交易账户、业务类型、合约类型、交易市场、资产品种、交易方向等维度匹配顺序名称，再按该顺序名称对应的渠道优先级报单。</p>
+
+      <h3>3.8、业务流程</h3>
+      <pre>进入页面 → 维护顺序配置 → 维护模板配置 → 点击客户配置新增 → 选择交易账户 → 可选模板名称快速填入 → 调整明细 → 保存客户最终明细</pre>
+
+      <h3>3.9、用户分析</h3>
+      <table>
+        <thead><tr><th>提出客户</th><th>用户分类</th><th>场景说明</th></tr></thead>
+        <tbody>
+          <tr><td>TBD</td><td>运营人员</td><td>维护顺序配置、模板配置和客户最终明细。</td></tr>
+          <tr><td>TBD</td><td>实施人员</td><td>客户上线时通过模板快速初始化客户配置。</td></tr>
+          <tr><td>TBD</td><td>运维人员</td><td>排查客户智能路由结果时查看最终生效明细。</td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.9、功能配置说明</h3>
+      <table>
+        <thead><tr><th>序号</th><th>功能配置</th><th>产品标准开放</th><th>开放客户</th><th>初始化系统配置</th><th>是否兼容历史版本</th><th>是否需要联动其他功能</th><th>是否客户无感升级</th><th>升级说明</th></tr></thead>
+        <tbody><tr><td>1</td><td>报单排序模板配置新版页面</td><td>是</td><td>ALL</td><td>需要初始化默认顺序配置、默认模板配置；历史客户模板绑定需迁移为客户明细配置</td><td>兼容</td><td>按钮权限控制、交易账户基础数据、码表、对冲渠道基础数据</td><td>页面变动，用户使用习惯发生重大变化</td><td>客户配置由“绑定模板”调整为“保存最终明细”</td></tr></tbody>
+      </table>
+
+      <h2>4、功能设计</h2>
+      <h3>BCT系统模块</h3>
+
+      <h3>4.1、设计功能点一：模板基础配置 - 顺序配置</h3>
+      <p>顺序配置用于维护不同对冲渠道的报单先后顺序。每个顺序配置包含顺序名称、备注和多条对冲渠道明细。</p>
+      <table>
+        <thead><tr><th>位置</th><th>序号</th><th>名称</th><th>类型</th><th>变更说明</th><th>只读</th><th>校验</th><th>校验报错信息</th><th>默认值</th><th>枚举值</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>顺序配置母表</td><td>1</td><td>顺序名称</td><td>文本/输入</td><td>优化</td><td>否</td><td>必填、建议唯一</td><td>请输入顺序名称</td><td>空</td><td>-</td><td>供后续引用</td></tr>
+          <tr><td>顺序配置子表</td><td>2</td><td>报单排序</td><td>数字</td><td>优化</td><td>是</td><td>系统计算</td><td>无</td><td>1</td><td>-</td><td>根据行顺序自动生成</td></tr>
+          <tr><td>顺序配置子表</td><td>3</td><td>对冲渠道</td><td>下拉/文本</td><td>优化</td><td>否</td><td>必填</td><td>请选择对冲渠道</td><td>空</td><td>QFII2、Mock、CMS_QFII、CMS_SC、HTSC、CICC、IB</td><td>渠道基础数据</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.2、设计功能点二：模板基础配置 - 模板配置</h3>
+      <p>模板配置用于维护可复用的模板明细。模板用于客户配置新增时快速填入，不作为客户最终保存字段。</p>
+      <table>
+        <thead><tr><th>位置</th><th>序号</th><th>事件</th><th>校验</th><th>校验报错信息</th><th>影响</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>模板配置母表</td><td>1</td><td>点击操作列“编辑”</td><td>无</td><td>无</td><td>当前模板母表行进入编辑态，模板名称、备注可修改，按钮变为“保存”</td><td>编辑期间不影响已保存客户配置</td></tr>
+          <tr><td>模板配置母表</td><td>2</td><td>点击操作列“保存”</td><td>模板名称必填、建议唯一</td><td>请输入模板名称/模板名称已存在</td><td>保存模板母表字段，退出编辑态</td><td>刷新新增客户配置弹框模板名称下拉</td></tr>
+          <tr><td>模板配置母表</td><td>3</td><td>点击操作列“删除”</td><td>删除前确认</td><td>当前模板存在明细，请确认是否删除</td><td>删除模板及其模板明细</td><td>不影响已通过该模板保存的客户配置明细</td></tr>
+          <tr><td>模板配置子表</td><td>4</td><td>点击操作列“编辑”</td><td>无</td><td>无</td><td>当前明细行进入编辑态，全部明细字段可修改</td><td>-</td></tr>
+          <tr><td>模板配置子表</td><td>5</td><td>点击操作列“保存”</td><td>明细必填字段完整、同一模板下业务维度建议唯一</td><td>请完善模板明细/当前模板下存在重复明细</td><td>保存当前明细并退出编辑态</td><td>唯一性建议按业务类型+合约类型+交易市场+资产品种+交易方向</td></tr>
+          <tr><td>模板配置子表</td><td>6</td><td>点击操作列“删除”</td><td>删除需确认</td><td>无</td><td>删除当前模板明细</td><td>不影响已保存客户配置</td></tr>
+        </tbody>
+      </table>
+      <p><strong>功能逻辑：</strong>模板名称只在新增客户配置时用于快速填入；点击编辑后仅当前行进入编辑态；点击保存时进行必填和唯一性校验；删除模板或模板明细只影响后续快速填入，不影响已保存客户配置。</p>
+
+      <h3>4.3、设计功能点三：客户配置列表</h3>
+      <p>客户配置列表展示交易账户维度最终保存的智能路由明细。新增客户配置弹框写入本功能点的字段与交互中，不单独作为功能点。</p>
+      <table>
+        <thead><tr><th>位置</th><th>序号</th><th>名称</th><th>类型</th><th>变更说明</th><th>只读</th><th>校验</th><th>校验报错信息</th><th>默认值</th><th>枚举值</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>客户配置列表</td><td>1</td><td>交易账户</td><td>文本</td><td>优化</td><td>是</td><td>必填</td><td>请选择交易账户</td><td>空</td><td>交易账户基础数据</td><td>最终保存字段</td></tr>
+          <tr><td>客户配置列表</td><td>2</td><td>业务类型/合约类型/交易市场/资产品种/交易方向/顺序名称</td><td>文本</td><td>新增</td><td>是</td><td>必填</td><td>请完善客户配置明细</td><td>空</td><td>来源于码表和顺序配置</td><td>最终保存字段</td></tr>
+          <tr><td>新增客户配置弹框顶部</td><td>3</td><td>交易账户</td><td>下拉单选</td><td>新增</td><td>否</td><td>必填</td><td>请选择交易账户</td><td>请选择</td><td>交易账户基础数据</td><td>保存时统一带入明细</td></tr>
+          <tr><td>新增客户配置弹框顶部</td><td>4</td><td>模板名称</td><td>下拉单选</td><td>新增</td><td>否</td><td>非必填</td><td>无</td><td>请选择</td><td>来源于模板配置</td><td>仅用于快速填入，不保存</td></tr>
+          <tr><td>新增客户配置弹框明细表</td><td>5</td><td>业务类型/合约类型/交易市场/资产品种/交易方向/顺序名称</td><td>下拉单选</td><td>新增</td><td>否</td><td>必填</td><td>请完善客户配置明细</td><td>默认枚举值</td><td>来源于码表和顺序配置</td><td>明细表不展示交易账户列</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th>位置</th><th>序号</th><th>事件</th><th>校验</th><th>校验报错信息</th><th>影响</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>客户配置区域</td><td>1</td><td>点击新增</td><td>无</td><td>无</td><td>打开新增客户配置弹框</td><td>-</td></tr>
+          <tr><td>新增客户配置弹框顶部</td><td>2</td><td>选择交易账户</td><td>必填</td><td>请选择交易账户</td><td>保存时将该账户统一带入所有明细</td><td>明细表不展示交易账户列</td></tr>
+          <tr><td>新增客户配置弹框顶部</td><td>3</td><td>选择模板名称</td><td>无</td><td>无</td><td>将模板下明细复制到弹框明细表</td><td>模板名称仅用于快速填入，不保存</td></tr>
+          <tr><td>新增客户配置弹框明细表</td><td>4</td><td>点击新增一行/删除/修改字段</td><td>明细字段需完整</td><td>请完善客户配置明细</td><td>更新弹框内待保存明细</td><td>保存前不影响下方列表</td></tr>
+          <tr><td>新增客户配置弹框底部</td><td>5</td><td>点击保存</td><td>交易账户必填、明细不为空、唯一性校验</td><td>请选择交易账户/请至少新增一条明细/当前交易账户下存在重复配置</td><td>将交易账户与弹框明细组合后写入客户配置列表</td><td>保存最终明细，不保存模板名称</td></tr>
+        </tbody>
+      </table>
+      <p><strong>功能逻辑：</strong>客户配置列表为最终生效数据；弹框明细表不展示交易账户列；保存时由弹框顶部交易账户统一带入；模板后续变更不自动影响已保存客户配置。</p>
+
+      <h3>用户故事/验收条件</h3>
+      <p>作为运营人员，我希望通过模板快速新增客户配置明细，以便减少重复录入并保证最终配置可核对。</p>
+      <pre>Given 系统已存在模板配置和顺序配置
+When 用户在新增客户配置弹框中选择交易账户并选择模板名称
+Then 系统应将模板明细填入弹框明细表
+And 弹框明细表不展示交易账户列
+When 用户点击保存
+Then 系统应保存交易账户维度最终明细
+And 客户配置列表不展示模板名称字段</pre>
+
+      <p>作为交易运营人员，我希望在模板填入后继续调整客户明细，以便处理客户个性化路由要求。</p>
+      <pre>Given 用户已通过模板名称快速填入客户配置明细
+When 用户删除部分明细并新增个性化明细后点击保存
+Then 系统应保存用户调整后的最终明细
+And 不应强制保存模板原始完整明细</pre>
+
+      <h3>APP系统模块</h3>
+      <p>本次需求不涉及 APP 系统模块。</p>
+      <h3>OMS系统模块</h3>
+      <p>本次需求不涉及 OMS 系统模块。</p>
+
+      <h2>5、非功能性要求(或有)</h2>
+      <p><strong>运行环境需求：</strong>支持 BCT 系统当前浏览器兼容范围，适配现有菜单、权限、布局规范。</p>
+      <p><strong>性能需求：</strong>顺序配置、模板配置、客户配置列表在 500 条明细以内保持流畅；模板快速填入 100 条明细以内应不超过 1 秒。</p>
+
+      <h2>6、依赖与限制(或有)</h2>
+      <p>依赖项：交易账户基础数据、对冲渠道基础数据、业务类型码表、合约类型码表、交易市场码表、资产品种码表、交易方向码表、顺序配置接口、模板配置接口、客户配置明细接口、BCT 按钮权限控制。</p>
+
+      <h2>7、局限说明 (或有)</h2>
+      <table>
+        <thead><tr><th>序号</th><th>局限说明</th><th>说明人</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>本次原型重点覆盖新增客户配置，未完整展开客户配置编辑、删除、批量维护能力</td><td>XXX</td><td>后续二阶段补充</td></tr>
+          <tr><td>2</td><td>模板变更后不自动同步已保存客户配置</td><td>XXX</td><td>避免历史客户配置被意外覆盖</td></tr>
+          <tr><td>3</td><td>当前新版原型中资产品种为单选</td><td>XXX</td><td>如业务要求多选，保存时需拆分为多条明细</td></tr>
+        </tbody>
+      </table>
+
+      <h2>8、待确定问题(或有)</h2>
+      <table>
+        <thead><tr><th>序号</th><th>需求问题</th><th>提出人</th><th>跟进人</th><th>完成状态</th><th>问题结论</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>同一交易账户下客户配置唯一性是否按“业务类型 + 合约类型 + 交易市场 + 资产品种 + 交易方向”判断</td><td>XXX</td><td>TBD</td><td>待确认</td><td>建议按该组合唯一，不包含顺序名称</td><td>防止同一场景命中多个顺序</td></tr>
+          <tr><td>2</td><td>模板明细中的资产品种是否需要支持多选</td><td>XXX</td><td>TBD</td><td>待确认</td><td>当前原型为单选</td><td>多选需保存时拆分</td></tr>
+          <tr><td>3</td><td>是否需要提供“按模板刷新客户配置”能力</td><td>XXX</td><td>TBD</td><td>待确认</td><td>当前不自动刷新</td><td>如需要需单独设计</td></tr>
+        </tbody>
+      </table>
+
+      <h2>9、附录(或有)</h2>
+      <p>参考资料：新版 UI 原型 <code>template-config-sheet-ui.html</code>、历史 PRD <code>PRD.md</code>、历史 HTML PRD <code>PRD.html</code>。</p>
+    </main>
+  </body>
+</html>

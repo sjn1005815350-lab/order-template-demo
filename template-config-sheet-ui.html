@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>报单排序模板配置</title>
+    <style>
+      :root {
+        --bg: #f3f7fb;
+        --card: #fff;
+        --line: #dce5ef;
+        --head: #eef5fc;
+        --sub-head: #f7fbff;
+        --text: #1f2d3d;
+        --muted: #6b7785;
+        --primary: #1e88e5;
+        --primary-soft: #e7f3ff;
+        --danger: #d93025;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 1200px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+        font-size: 14px;
+      }
+
+      .page {
+        padding: 18px 20px 32px;
+      }
+
+      .page-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .page-header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+      }
+
+      .link {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      .card {
+        margin-bottom: 14px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--card);
+        box-shadow: 0 2px 8px rgb(31 45 61 / 6%);
+        overflow: hidden;
+      }
+
+      .section-title {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfdff;
+        font-weight: 700;
+      }
+
+      .sheet-tabs {
+        display: flex;
+        gap: 6px;
+        padding: 10px 12px 0;
+        background: #fbfdff;
+      }
+
+      .sheet-tab {
+        min-width: 120px;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-bottom: 0;
+        border-radius: 5px 5px 0 0;
+        background: #f8fbff;
+        color: #34495e;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .sheet-tab.active {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+
+      .sheet-panel {
+        display: none;
+      }
+
+      .sheet-panel.active {
+        display: block;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .toolbar strong {
+        margin-right: 8px;
+      }
+
+      .toolbar span {
+        color: var(--muted);
+      }
+
+      .toolbar-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      button {
+        height: 30px;
+        border: 0;
+        border-radius: 3px;
+        padding: 0 12px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .primary-btn {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .ghost-btn {
+        border: 1px solid #cbd6e2;
+        background: #fff;
+        color: #34495e;
+      }
+
+      .link-btn {
+        height: auto;
+        background: transparent;
+        color: var(--primary);
+        padding: 0 5px;
+      }
+
+      .link-btn.danger {
+        color: var(--danger);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        height: 34px;
+        border-right: 1px solid #edf1f5;
+        border-bottom: 1px solid #edf1f5;
+        padding: 0 10px;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      th {
+        background: var(--head);
+        color: #405466;
+        font-weight: 600;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #f9fbfd;
+      }
+
+      tbody tr:hover {
+        background: #d8ecfb;
+      }
+
+      .expand-col,
+      .drag-col {
+        width: 48px;
+        text-align: center;
+      }
+
+      .expand-btn {
+        width: 24px;
+        height: 24px;
+        border: 1px solid #b9c7d6;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--primary);
+        padding: 0;
+        line-height: 22px;
+        font-weight: 700;
+      }
+
+      .child-cell {
+        padding: 10px 14px 14px 52px;
+        background: #fbfdff;
+      }
+
+      .child-panel {
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+        overflow: auto;
+      }
+
+      .child-panel th {
+        background: var(--sub-head);
+      }
+
+      .drag-col {
+        color: #9aa8b5;
+        cursor: grab;
+        letter-spacing: -2px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        height: 22px;
+        margin-right: 6px;
+        border-radius: 11px;
+        padding: 0 9px;
+        background: var(--primary-soft);
+        color: #1769aa;
+        font-size: 12px;
+      }
+
+      .add-row-cell {
+        padding: 8px 10px;
+        background: #fbfdff;
+        text-align: center;
+      }
+
+      .add-row-btn {
+        width: 100%;
+        border: 1px dashed #9ec9ed;
+        background: #f5fbff;
+        color: var(--primary);
+      }
+
+      .inline-input,
+      .inline-select {
+        width: 170px;
+        height: 28px;
+        border: 1px solid #cfd8e3;
+        border-radius: 3px;
+        background: #fff;
+        color: var(--text);
+        padding: 0 8px;
+      }
+
+      .inline-select[multiple] {
+        height: 64px;
+        padding: 4px 8px;
+      }
+
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfdff;
+      }
+
+      .modal-mask {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgb(0 0 0 / 32%);
+        z-index: 10;
+      }
+
+      .modal-mask.open {
+        display: flex;
+      }
+
+      .modal {
+        width: min(1320px, calc(100vw - 48px));
+        max-height: 86vh;
+        border-radius: 6px;
+        background: #fff;
+        box-shadow: 0 12px 28px rgb(0 0 0 / 18%);
+        overflow: hidden;
+      }
+
+      .modal-header,
+      .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .modal-footer {
+        justify-content: flex-end;
+        gap: 8px;
+        border-top: 1px solid var(--line);
+        border-bottom: 0;
+      }
+
+      .modal-body {
+        padding: 14px 16px;
+        max-height: calc(86vh - 112px);
+        overflow: auto;
+      }
+
+      .modal .child-panel table {
+        min-width: 1120px;
+      }
+
+      .modal .child-panel th:last-child,
+      .modal .child-panel td:last-child {
+        width: 80px;
+        min-width: 80px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 260px 260px;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field select {
+        height: 30px;
+        border: 1px solid #cfd8e3;
+        border-radius: 3px;
+        padding: 0 8px;
+      }
+
+      .required {
+        color: var(--danger);
+      }
+
+      .hint {
+        color: var(--muted);
+        line-height: 30px;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 28px;
+        display: none;
+        transform: translateX(-50%);
+        border-radius: 4px;
+        background: rgb(0 0 0 / 78%);
+        color: #fff;
+        padding: 9px 14px;
+        z-index: 20;
+      }
+
+      .toast.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <div>
+          <h1>报单排序配置</h1>
+        </div>
+        <a class="link" href="./index.html">返回原 Demo</a>
+      </header>
+
+      <section class="card">
+        <div class="sheet-tabs">
+          <button class="sheet-tab active" data-sheet="sequenceSheet">报单顺序配置</button>
+          <button class="sheet-tab" data-sheet="templateSheet">模板配置</button>
+        </div>
+
+        <div class="sheet-panel active" id="sequenceSheet">
+          <table>
+            <thead>
+              <tr>
+                <th class="expand-col"></th>
+                <th>报单顺序名称</th>
+                <th>备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="sequenceTable"></tbody>
+          </table>
+        </div>
+
+        <div class="sheet-panel" id="templateSheet">
+          <table>
+            <thead>
+              <tr>
+                <th class="expand-col"></th>
+                <th>模板名称</th>
+                <th>备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="templateTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="toolbar">
+          <div>
+            <strong>客户配置</strong>
+          </div>
+          <button class="primary-btn" id="openCustomerModalBtn">新增</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th class="expand-col"></th>
+              <th>交易账户</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="customerTable"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <div class="modal-mask" id="customerModalMask">
+      <div class="modal">
+        <div class="modal-header">
+          <strong>新增客户配置</strong>
+          <button class="ghost-btn" id="closeCustomerModalBtn">关闭</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <label class="field">
+              <span>交易账户 <em class="required">*</em></span>
+              <select id="modalAccountSelect">
+                <option value="">请选择</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>模板名称</span>
+              <select id="modalTemplateSelect">
+                <option value="">请选择</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="child-panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>业务类型</th>
+                  <th>合约类型</th>
+                  <th>交易市场</th>
+                  <th>资产品种</th>
+                  <th>交易方向</th>
+                  <th>顺序名称</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="modalDetailTable"></tbody>
+              <tfoot>
+                <tr>
+                  <td class="add-row-cell" colspan="7">
+                    <button class="add-row-btn" id="addModalDetailBtn">新增一行</button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="ghost-btn" id="cancelCustomerModalBtn">取消</button>
+          <button class="primary-btn" id="saveCustomerModalBtn">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const hedgeChannels = ["QFII2", "Mock", "CMS_QFII", "CMS_SC", "HTSC", "CICC", "IB"];
+      const accounts = ["T10000011", "T10000013", "T10000019", "T10000028"];
+      const businessTypes = ["普通交易", "空头交易", "Swap交易"];
+      const contractTypes = ["现金", "融资", "融券", "Swap", "期货"];
+      const tradingMarkets = ["A股", "港股", "美股", "境内商品", "境内股指"];
+      const assetTypes = ["股票", "可转债", "ETF", "商品期货", "股指期货"];
+      const directions = ["买入", "卖出", "买开", "卖平", "卖开", "买平"];
+
+      let sequences = [
+        {
+          id: "seq-1",
+          name: "权益默认顺序",
+          remark: "A股权益类默认渠道顺序",
+          routes: ["QFII2", "Mock", "CMS_QFII", "CMS_SC"],
+        },
+        {
+          id: "seq-2",
+          name: "跨境备用顺序",
+          remark: "港股、美股备用渠道顺序",
+          routes: ["CMS_SC", "HTSC"],
+        },
+        {
+          id: "seq-3",
+          name: "空头交易顺序",
+          remark: "期货空头交易渠道顺序",
+          routes: ["CICC", "IB"],
+        },
+      ];
+
+      let templates = [
+        {
+          id: "tpl-1",
+          name: "权益综合模板",
+          remark: "股票、可转债、ETF 组合模板",
+          rules: [
+            {
+              businessType: "普通交易",
+              contractType: "现金",
+              tradingMarket: "A股",
+              assetTypes: ["股票", "ETF"],
+              direction: "买入",
+              sequenceName: "权益默认顺序",
+            },
+            {
+              businessType: "普通交易",
+              contractType: "现金",
+              tradingMarket: "A股",
+              assetTypes: ["ETF"],
+              direction: "买入",
+              sequenceName: "权益默认顺序",
+            },
+            {
+              businessType: "普通交易",
+              contractType: "融资",
+              tradingMarket: "A股",
+              assetTypes: ["可转债"],
+              direction: "买入",
+              sequenceName: "跨境备用顺序",
+            },
+          ],
+        },
+        {
+          id: "tpl-2",
+          name: "空头交易模板",
+          remark: "商品和股指期货使用",
+          rules: [
+            {
+              businessType: "空头交易",
+              contractType: "期货",
+              tradingMarket: "境内商品",
+              assetTypes: ["商品期货"],
+              direction: "卖开",
+              sequenceName: "空头交易顺序",
+            },
+            {
+              businessType: "空头交易",
+              contractType: "期货",
+              tradingMarket: "境内股指",
+              assetTypes: ["股指期货"],
+              direction: "买平",
+              sequenceName: "空头交易顺序",
+            },
+          ],
+        },
+      ];
+
+      let customerConfigs = [
+        {
+          account: "T10000011",
+          businessType: "普通交易",
+          contractType: "现金",
+          tradingMarket: "A股",
+          assetTypes: ["股票", "ETF"],
+          direction: "买入",
+          sequenceName: "权益默认顺序",
+        },
+        {
+          account: "T10000013",
+          businessType: "空头交易",
+          contractType: "期货",
+          tradingMarket: "境内商品",
+          assetTypes: ["商品期货"],
+          direction: "卖开",
+          sequenceName: "空头交易顺序",
+        },
+      ];
+
+      const expandedSequences = new Set(["seq-1"]);
+      const expandedTemplates = new Set(["tpl-1"]);
+      const expandedCustomerAccounts = new Set(["T10000011"]);
+      const editingTemplateRules = new Set();
+      const editingCustomers = new Set();
+      let draggedRoute = null;
+      let modalDetails = [];
+
+      const $ = (id) => document.getElementById(id);
+
+      const showToast = (message) => {
+        const toast = $("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.setTimeout(() => toast.classList.remove("show"), 2200);
+      };
+
+      const options = (values, selected) =>
+        values.map((value) => `<option value="${value}" ${value === selected ? "selected" : ""}>${value}</option>`).join("");
+
+      const multiOptions = (values, selectedValues = []) =>
+        values.map((value) => `<option value="${value}" ${selectedValues.includes(value) ? "selected" : ""}>${value}</option>`).join("");
+
+      const renderAssetTags = (values = []) => values.map((value) => `<span class="tag">${value}</span>`).join("");
+
+      const sequenceNames = () => sequences.map((item) => item.name);
+
+      const renderSequenceChild = (sequence) => `
+        <div class="child-panel">
+          <table>
+            <thead>
+              <tr>
+                <th class="drag-col"></th>
+                <th>报单排序</th>
+                <th>对冲渠道</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sequence.routes
+                .map(
+                  (channel, index) => `
+                    <tr draggable="true" data-drag-sequence="${sequence.id}" data-index="${index}">
+                      <td class="drag-col" title="拖动排序">⋮⋮</td>
+                      <td>${index + 1}</td>
+                      <td>${channel}</td>
+                      <td><button class="link-btn danger" data-action="delete-route" data-sequence-id="${sequence.id}" data-index="${index}">删除</button></td>
+                    </tr>
+                  `,
+                )
+                .join("")}
+            </tbody>
+            <tfoot>
+              <tr><td class="add-row-cell" colspan="4"><button class="add-row-btn">新增一行</button></td></tr>
+            </tfoot>
+          </table>
+        </div>
+      `;
+
+      const renderSequences = () => {
+        $("sequenceTable").innerHTML = sequences
+          .map((sequence) => {
+            const expanded = expandedSequences.has(sequence.id);
+            return `
+              <tr>
+                <td class="expand-col"><button class="expand-btn" data-action="toggle-sequence" data-sequence-id="${sequence.id}">${expanded ? "-" : "+"}</button></td>
+                <td>${sequence.name}</td>
+                <td>${sequence.remark}</td>
+                <td><button class="link-btn">编辑</button><button class="link-btn danger">删除</button></td>
+              </tr>
+              ${expanded ? `<tr><td class="child-cell" colspan="4">${renderSequenceChild(sequence)}</td></tr>` : ""}
+            `;
+          })
+          .join("");
+      };
+
+      const renderTemplateChild = (template) => `
+        <div class="child-panel">
+          <table>
+            <thead>
+              <tr>
+                <th>业务类型</th>
+                <th>合约类型</th>
+                <th>交易市场</th>
+                <th>资产品种</th>
+                <th>交易方向</th>
+                <th>顺序名称</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${template.rules
+                .map(
+                  (rule, index) => {
+                    const rowKey = `${template.id}-${index}`;
+                    const editing = editingTemplateRules.has(rowKey);
+                    return `
+                    <tr>
+                      <td>${editing ? `<select class="inline-select" data-template-field="businessType" data-template-id="${template.id}" data-index="${index}">${options(businessTypes, rule.businessType)}</select>` : rule.businessType}</td>
+                      <td>${editing ? `<select class="inline-select" data-template-field="contractType" data-template-id="${template.id}" data-index="${index}">${options(contractTypes, rule.contractType)}</select>` : rule.contractType}</td>
+                      <td>${editing ? `<select class="inline-select" data-template-field="tradingMarket" data-template-id="${template.id}" data-index="${index}">${options(tradingMarkets, rule.tradingMarket)}</select>` : rule.tradingMarket}</td>
+                      <td>${editing ? `<select class="inline-select" multiple data-template-field="assetTypes" data-template-id="${template.id}" data-index="${index}">${multiOptions(assetTypes, rule.assetTypes)}</select>` : renderAssetTags(rule.assetTypes)}</td>
+                      <td>${editing ? `<select class="inline-select" data-template-field="direction" data-template-id="${template.id}" data-index="${index}">${options(directions, rule.direction)}</select>` : rule.direction}</td>
+                      <td>${editing ? `<select class="inline-select" data-template-field="sequenceName" data-template-id="${template.id}" data-index="${index}">${options(sequenceNames(), rule.sequenceName)}</select>` : rule.sequenceName}</td>
+                      <td>
+                        <button class="link-btn" data-action="${editing ? "save-template-rule" : "edit-template-rule"}" data-template-id="${template.id}" data-index="${index}">${editing ? "保存" : "编辑"}</button>
+                        <button class="link-btn danger" data-action="delete-template-rule" data-template-id="${template.id}" data-index="${index}">删除</button>
+                      </td>
+                    </tr>
+                  `;
+                  },
+                )
+                .join("")}
+            </tbody>
+            <tfoot>
+              <tr><td class="add-row-cell" colspan="7"><button class="add-row-btn" data-action="add-template-rule" data-template-id="${template.id}">新增一行</button></td></tr>
+            </tfoot>
+          </table>
+        </div>
+      `;
+
+      const renderTemplates = () => {
+        $("templateTable").innerHTML = templates
+          .map((template) => {
+            const expanded = expandedTemplates.has(template.id);
+            return `
+              <tr>
+                <td class="expand-col"><button class="expand-btn" data-action="toggle-template" data-template-id="${template.id}">${expanded ? "-" : "+"}</button></td>
+                <td>${template.name}</td>
+                <td>${template.remark}</td>
+                <td><button class="link-btn">编辑</button><button class="link-btn danger">删除</button></td>
+              </tr>
+              ${expanded ? `<tr><td class="child-cell" colspan="4">${renderTemplateChild(template)}</td></tr>` : ""}
+            `;
+          })
+          .join("");
+      };
+
+      const renderCustomerChild = (rows) => `
+        <div class="child-panel">
+          <table>
+            <thead>
+              <tr>
+                <th>业务类型</th>
+                <th>合约类型</th>
+                <th>交易市场</th>
+                <th>资产品种</th>
+                <th>交易方向</th>
+                <th>顺序名称</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows
+                .map(({ item, index }) => {
+              const editing = editingCustomers.has(index);
+              return `
+              <tr>
+                <td>${editing ? `<select class="inline-select" data-customer-field="businessType" data-index="${index}">${options(businessTypes, item.businessType)}</select>` : item.businessType}</td>
+                <td>${editing ? `<select class="inline-select" data-customer-field="contractType" data-index="${index}">${options(contractTypes, item.contractType)}</select>` : item.contractType}</td>
+                <td>${editing ? `<select class="inline-select" data-customer-field="tradingMarket" data-index="${index}">${options(tradingMarkets, item.tradingMarket)}</select>` : item.tradingMarket}</td>
+                <td>${editing ? `<select class="inline-select" multiple data-customer-field="assetTypes" data-index="${index}">${multiOptions(assetTypes, item.assetTypes)}</select>` : renderAssetTags(item.assetTypes)}</td>
+                <td>${editing ? `<select class="inline-select" data-customer-field="direction" data-index="${index}">${options(directions, item.direction)}</select>` : item.direction}</td>
+                <td>${editing ? `<select class="inline-select" data-customer-field="sequenceName" data-index="${index}">${options(sequenceNames(), item.sequenceName)}</select>` : item.sequenceName}</td>
+                <td>
+                  <button class="link-btn" data-action="${editing ? "save-customer" : "edit-customer"}" data-index="${index}">${editing ? "保存" : "编辑"}</button>
+                  <button class="link-btn danger" data-action="delete-customer" data-index="${index}">删除</button>
+                </td>
+              </tr>
+            `;
+                })
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      const renderCustomers = () => {
+        const groupedCustomers = [...new Set(customerConfigs.map((item) => item.account))].map((account) => ({
+          account,
+          rows: customerConfigs.map((item, index) => ({ item, index })).filter(({ item }) => item.account === account),
+        }));
+
+        $("customerTable").innerHTML = groupedCustomers
+          .map(({ account, rows }) => {
+            const expanded = expandedCustomerAccounts.has(account);
+            return `
+              <tr>
+                <td class="expand-col"><button class="expand-btn" data-action="toggle-customer-account" data-account="${account}">${expanded ? "-" : "+"}</button></td>
+                <td>${account}</td>
+                <td><button class="link-btn danger" data-action="delete-customer-account" data-account="${account}">删除</button></td>
+              </tr>
+              ${expanded ? `<tr><td class="child-cell" colspan="3">${renderCustomerChild(rows)}</td></tr>` : ""}
+            `;
+          })
+          .join("");
+      };
+
+      const renderModalSelects = () => {
+        $("modalAccountSelect").innerHTML = `<option value="">请选择</option>${options(accounts)}`;
+        $("modalTemplateSelect").innerHTML = `<option value="">请选择</option>${templates
+          .map((template) => `<option value="${template.id}">${template.name}</option>`)
+          .join("")}`;
+      };
+
+      const renderModalDetails = () => {
+        $("modalDetailTable").innerHTML = modalDetails
+          .map(
+            (item, index) => `
+              <tr>
+                <td><select class="inline-select" data-modal-field="businessType" data-index="${index}">${options(businessTypes, item.businessType)}</select></td>
+                <td><select class="inline-select" data-modal-field="contractType" data-index="${index}">${options(contractTypes, item.contractType)}</select></td>
+                <td><select class="inline-select" data-modal-field="tradingMarket" data-index="${index}">${options(tradingMarkets, item.tradingMarket)}</select></td>
+                <td><select class="inline-select" multiple data-modal-field="assetTypes" data-index="${index}">${multiOptions(assetTypes, item.assetTypes)}</select></td>
+                <td><select class="inline-select" data-modal-field="direction" data-index="${index}">${options(directions, item.direction)}</select></td>
+                <td><select class="inline-select" data-modal-field="sequenceName" data-index="${index}">${options(sequenceNames(), item.sequenceName)}</select></td>
+                <td><button class="link-btn danger" data-action="delete-modal-row" data-index="${index}">删除</button></td>
+              </tr>
+            `,
+          )
+          .join("");
+      };
+
+      const openCustomerModal = () => {
+        modalDetails = [];
+        renderModalSelects();
+        renderModalDetails();
+        $("customerModalMask").classList.add("open");
+      };
+
+      const closeCustomerModal = () => {
+        $("customerModalMask").classList.remove("open");
+      };
+
+      const addModalDetail = () => {
+        modalDetails.push({
+          businessType: businessTypes[0],
+          contractType: contractTypes[0],
+          tradingMarket: tradingMarkets[0],
+          assetTypes: [assetTypes[0]],
+          direction: directions[0],
+          sequenceName: sequenceNames()[0],
+        });
+        renderModalDetails();
+      };
+
+      const fillDetailsByTemplate = () => {
+        const template = templates.find((item) => item.id === $("modalTemplateSelect").value);
+        modalDetails = template ? template.rules.map((rule) => ({ ...rule, assetTypes: [...rule.assetTypes] })) : [];
+        renderModalDetails();
+      };
+
+      const saveCustomerConfig = () => {
+        const account = $("modalAccountSelect").value;
+        if (!account) {
+          showToast("请选择交易账户");
+          return;
+        }
+        if (!modalDetails.length) {
+          showToast("请至少新增一条明细");
+          return;
+        }
+        customerConfigs = customerConfigs.concat(modalDetails.map((item) => ({ ...item, account })));
+        expandedCustomerAccounts.add(account);
+        renderCustomers();
+        closeCustomerModal();
+        showToast("客户配置已保存，保存内容为明细数据");
+      };
+
+      document.querySelectorAll(".sheet-tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".sheet-tab").forEach((item) => item.classList.remove("active"));
+          document.querySelectorAll(".sheet-panel").forEach((item) => item.classList.remove("active"));
+          tab.classList.add("active");
+          $(tab.dataset.sheet).classList.add("active");
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("[data-action]");
+        if (!target) return;
+        const action = target.dataset.action;
+        if (action === "toggle-sequence") {
+          const id = target.dataset.sequenceId;
+          expandedSequences.has(id) ? expandedSequences.delete(id) : expandedSequences.add(id);
+          renderSequences();
+        }
+        if (action === "toggle-template") {
+          const id = target.dataset.templateId;
+          expandedTemplates.has(id) ? expandedTemplates.delete(id) : expandedTemplates.add(id);
+          renderTemplates();
+        }
+        if (action === "delete-route") {
+          const sequence = sequences.find((item) => item.id === target.dataset.sequenceId);
+          sequence.routes.splice(Number(target.dataset.index), 1);
+          renderSequences();
+        }
+        if (action === "add-template-rule") {
+          const template = templates.find((item) => item.id === target.dataset.templateId);
+          template.rules.push({
+            businessType: businessTypes[0],
+            contractType: contractTypes[0],
+            tradingMarket: tradingMarkets[0],
+            assetTypes: [assetTypes[0]],
+            direction: directions[0],
+            sequenceName: sequenceNames()[0],
+          });
+          editingTemplateRules.add(`${target.dataset.templateId}-${template.rules.length - 1}`);
+          renderTemplates();
+        }
+        if (action === "edit-template-rule") {
+          editingTemplateRules.add(`${target.dataset.templateId}-${target.dataset.index}`);
+          renderTemplates();
+        }
+        if (action === "save-template-rule") {
+          editingTemplateRules.delete(`${target.dataset.templateId}-${target.dataset.index}`);
+          renderTemplates();
+        }
+        if (action === "delete-template-rule") {
+          const template = templates.find((item) => item.id === target.dataset.templateId);
+          template.rules.splice(Number(target.dataset.index), 1);
+          editingTemplateRules.clear();
+          renderTemplates();
+        }
+        if (action === "delete-modal-row") {
+          modalDetails.splice(Number(target.dataset.index), 1);
+          renderModalDetails();
+        }
+        if (action === "toggle-customer-account") {
+          const account = target.dataset.account;
+          expandedCustomerAccounts.has(account) ? expandedCustomerAccounts.delete(account) : expandedCustomerAccounts.add(account);
+          renderCustomers();
+        }
+        if (action === "delete-customer-account") {
+          const account = target.dataset.account;
+          customerConfigs = customerConfigs.filter((item) => item.account !== account);
+          expandedCustomerAccounts.delete(account);
+          editingCustomers.clear();
+          renderCustomers();
+        }
+        if (action === "edit-customer") {
+          editingCustomers.add(Number(target.dataset.index));
+          renderCustomers();
+        }
+        if (action === "save-customer") {
+          editingCustomers.delete(Number(target.dataset.index));
+          renderCustomers();
+        }
+        if (action === "delete-customer") {
+          const index = Number(target.dataset.index);
+          const account = customerConfigs[index].account;
+          customerConfigs.splice(index, 1);
+          if (!customerConfigs.some((item) => item.account === account)) {
+            expandedCustomerAccounts.delete(account);
+          }
+          editingCustomers.clear();
+          renderCustomers();
+        }
+      });
+
+      document.addEventListener("dragstart", (event) => {
+        const row = event.target.closest("[data-drag-sequence]");
+        if (!row) return;
+        draggedRoute = { sequenceId: row.dataset.dragSequence, index: Number(row.dataset.index) };
+      });
+
+      document.addEventListener("dragover", (event) => {
+        if (event.target.closest("[data-drag-sequence]")) event.preventDefault();
+      });
+
+      document.addEventListener("drop", (event) => {
+        const row = event.target.closest("[data-drag-sequence]");
+        if (!row || !draggedRoute || draggedRoute.sequenceId !== row.dataset.dragSequence) return;
+        const sequence = sequences.find((item) => item.id === draggedRoute.sequenceId);
+        const [moved] = sequence.routes.splice(draggedRoute.index, 1);
+        sequence.routes.splice(Number(row.dataset.index), 0, moved);
+        draggedRoute = null;
+        renderSequences();
+      });
+
+      document.addEventListener("change", (event) => {
+        const modalField = event.target.dataset.modalField;
+        if (modalField) {
+          modalDetails[Number(event.target.dataset.index)][modalField] =
+            modalField === "assetTypes" ? Array.from(event.target.selectedOptions).map((option) => option.value) : event.target.value;
+          return;
+        }
+
+        const templateField = event.target.dataset.templateField;
+        if (templateField) {
+          const template = templates.find((item) => item.id === event.target.dataset.templateId);
+          template.rules[Number(event.target.dataset.index)][templateField] =
+            templateField === "assetTypes" ? Array.from(event.target.selectedOptions).map((option) => option.value) : event.target.value;
+          return;
+        }
+
+        const customerField = event.target.dataset.customerField;
+        if (!customerField) return;
+        customerConfigs[Number(event.target.dataset.index)][customerField] =
+          customerField === "assetTypes" ? Array.from(event.target.selectedOptions).map((option) => option.value) : event.target.value;
+      });
+
+      $("expandAllSequencesBtn")?.addEventListener("click", () => {
+        sequences.forEach((item) => expandedSequences.add(item.id));
+        renderSequences();
+      });
+      $("expandAllTemplatesBtn")?.addEventListener("click", () => {
+        templates.forEach((item) => expandedTemplates.add(item.id));
+        renderTemplates();
+      });
+      $("openCustomerModalBtn").addEventListener("click", openCustomerModal);
+      $("closeCustomerModalBtn").addEventListener("click", closeCustomerModal);
+      $("cancelCustomerModalBtn").addEventListener("click", closeCustomerModal);
+      $("addModalDetailBtn").addEventListener("click", addModalDetail);
+      $("saveCustomerModalBtn").addEventListener("click", saveCustomerConfig);
+      $("modalTemplateSelect").addEventListener("change", fillDetailsByTemplate);
+      $("customerModalMask").addEventListener("click", (event) => {
+        if (event.target === $("customerModalMask")) closeCustomerModal();
+      });
+
+      renderSequences();
+      renderTemplates();
+      renderCustomers();
+    </script>
+  </body>
+</html>
